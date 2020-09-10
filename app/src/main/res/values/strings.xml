@@ -5,4 +5,13 @@
     <string name="old_employee">Old</string>
     <string name="no_data_to_show">No data to show</string>
     <string name="subordinates">Subordinates:</string>
+    <string name="select_the_filter">Select the filter</string>
+    <string name="newEmployee">New Employee</string>
+    <string name="wage_filter">Filter by wage</string>
+
+    <string name="dialog_filter_title">"Select your filter"</string>
+    <string name="dialog_opc_antiquity">Group by antiquity</string>
+    <string name="dialog_opc_wege">Sort by wage</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

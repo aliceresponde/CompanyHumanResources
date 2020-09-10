@@ -9,6 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:id="@+id/rootLayout"
+        android:focusableInTouchMode="true"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
@@ -35,6 +37,7 @@
 
         <SearchView
             android:id="@+id/searchView"
+            android:queryHint="Employee name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

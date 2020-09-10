@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.companyhumanresources.data.OperationResult
+import com.example.companyhumanresources.data.OperationResult.Success
 import com.example.companyhumanresources.repository.EmployeeRepository
 import com.example.companyhumanresources.ui.common.Event
 import com.example.companyhumanresources.ui.employeesList.EmployeeItem
@@ -18,20 +20,23 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     private val _viewState = MutableLiveData<Event<EmployeeListState>>()
     val viewState: LiveData<Event<EmployeeListState>> get() = _viewState
 
-    private val _searchWord = MutableLiveData<Event<String>>()
-    val searchWord: LiveData<Event<String>> get() = _searchWord
+    private val _searchWord = MutableLiveData<String>()
+    val searchWord: LiveData<String> get() = _searchWord
 
     private val _isDataUpdated = MutableLiveData<Event<Boolean>>()
     val isDataUpdated: LiveData<Event<Boolean>> get() = _isDataUpdated
 
 
     fun getEmployees() {
-        viewModelScope.launch {
-            val data = withContext(IO) { repository.getAllEmployees() }
-            _viewState.value =
-                if (data.isEmpty()) Event(ShowEmptyData)
-                else Event(ShowEmployees(data))
-        }
+        if (searchWord.value.isNullOrEmpty())
+            viewModelScope.launch {
+                val data = withContext(IO) { repository.getAllEmployees() }
+                _viewState.value =
+                    if (data.isEmpty()) Event(ShowEmptyData)
+                    else Event(ShowEmployees(data))
+            }
+        else
+            getNewEmployeesByName(searchWord.value)
     }
 
     fun getNewEmployees() {
@@ -44,9 +49,10 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
         }
     }
 
-    fun getNewEmployeesByName(name: String) {
-        if (name.isEmpty()) getEmployees()
-        else
+    fun getNewEmployeesByName(name: String?) {
+        if (name.isNullOrEmpty())
+            getEmployees()
+        else{
             viewModelScope.launch {
                 _viewState.value = Event(ShowLoading)
                 val data = withContext(IO) { repository.getNewEmployeesByName(name) }
@@ -54,6 +60,7 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
                     if (data.isEmpty()) Event(ShowEmptyData)
                     else Event(ShowEmployees(data))
             }
+        }
     }
 
     fun syncData() {
@@ -63,6 +70,10 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
             }
             _isDataUpdated.postValue(Event(true))
         }
+    }
+
+    fun safeSearched(query: String?) {
+        _searchWord.value = query ?: ""
     }
 }
 
