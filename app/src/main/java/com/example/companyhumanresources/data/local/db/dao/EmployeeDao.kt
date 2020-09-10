@@ -10,7 +10,7 @@ interface EmployeeDao {
     @Query("SELECT * FROM employee_table")
     fun getAllEmployeesFlow(): Flow<List<Employee>>
 
-    @Query("SELECT * FROM employee_table ORDER BY wage")
+    @Query("SELECT * FROM employee_table")
     fun getAllEmployees():List<Employee>
 
     @Query("SELECT * FROM employee_table ORDER BY wage")

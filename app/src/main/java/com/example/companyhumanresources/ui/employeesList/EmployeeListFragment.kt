@@ -1,6 +1,10 @@
 package com.example.companyhumanresources.ui.employeesList
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.DialogInterface.OnCancelListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.companyhumanresources.App
 import com.example.companyhumanresources.R
+import com.example.companyhumanresources.databinding.FilterDialogLayoutBinding
 import com.example.companyhumanresources.databinding.FragmentEmployeeListBinding
+import com.example.companyhumanresources.ui.MainActivity
 import com.example.companyhumanresources.ui.common.EventObserver
 import com.example.companyhumanresources.ui.employeesList.adapter.EmployeeAdapter
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState
@@ -110,21 +116,22 @@ class EmployeeListFragment : Fragment() {
     }
 
     private fun showFilerDialog() {
-        val singleItems =
-            arrayOf(getString(R.string.dialog_opc_antiquity), getString(R.string.dialog_opc_wege))
-        val checkedItem = 1
-        val context = activity?.baseContext!!
-        MaterialAlertDialogBuilder(context)
-            .setTitle(resources.getString(R.string.dialog_filter_title))
-            .setNeutralButton(resources.getString(R.string.cancel)) { dialog, which -> }
-            .setPositiveButton(resources.getString(R.string.ok)) { dialog, which ->
+        activity?.let {
+            val dialogBinding = FilterDialogLayoutBinding.inflate(LayoutInflater.from(it))
 
-            }
-            // Single-choice items (initialized with checked item)
-            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
-                // Respond to item chosen
-            }
-            .show()
+            AlertDialog.Builder(it)
+                .setView(dialogBinding.root)
+                .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                    run {
+                        when (dialogBinding.filterGroup.checkedRadioButtonId) {
+                            R.id.filterNewEmployee -> viewModel.getNewEmployees()
+                            R.id.filterByWage -> viewModel.getEmployeesByWage()
+                            else -> {}
+                        }
+                    }
+                }
+                .show()
+        }
     }
 
     private fun showEmployeeDetail(employeeItem: EmployeeItem) {

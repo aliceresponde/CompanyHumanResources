@@ -71,6 +71,10 @@ class EmployeeRepositoryImpl(
         return localDataSource.getNewEmployees().map { it.toItem() }
     }
 
+    override suspend fun getEmployeesByWage(): List<EmployeeItem> {
+        return localDataSource.getEmployeesByWage().map { it.toItem() }
+    }
+
     override suspend fun getNewEmployeesByName(name: String): List<EmployeeItem> {
         return localDataSource.getNewEmployeesByName(name).map { it.toItem() }
     }

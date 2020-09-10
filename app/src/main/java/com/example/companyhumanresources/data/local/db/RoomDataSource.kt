@@ -46,6 +46,10 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
         return employeeDao.getNewEmployees()
     }
 
+    override suspend fun getEmployeesByWage(): List<Employee> {
+        return  employeeDao.getEmployeeByWage()
+    }
+
     override suspend fun getNewEmployeesByName(name: String): List<Employee> {
         return employeeDao.getEmployeeByWage(name)
     }

@@ -16,6 +16,7 @@ interface LocalDataSource {
     suspend fun deleteAllEmployees()
 
     suspend fun getNewEmployees() : List<Employee>
+    suspend fun getEmployeesByWage() : List<Employee>
     suspend fun getNewEmployeesByName(name: String) : List<Employee>
     suspend fun getEmployeesBySalary(): List<Employee>
 

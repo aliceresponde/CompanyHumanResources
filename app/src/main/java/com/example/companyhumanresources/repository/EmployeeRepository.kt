@@ -11,6 +11,7 @@ interface EmployeeRepository {
     suspend fun syncData()
     suspend fun getAllEmployees(): List<EmployeeItem>
     suspend fun getNewEmployees(): List<EmployeeItem>
+    suspend fun getEmployeesByWage(): List<EmployeeItem>
     suspend fun getNewEmployeesByName(name: String): List<EmployeeItem>
     suspend fun getEmployeesBySalary(): List<EmployeeItem>
     suspend fun updateEmployee(employee: Employee)

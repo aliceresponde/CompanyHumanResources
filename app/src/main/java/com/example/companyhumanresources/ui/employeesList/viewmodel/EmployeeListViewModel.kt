@@ -52,7 +52,7 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     fun getNewEmployeesByName(name: String?) {
         if (name.isNullOrEmpty())
             getEmployees()
-        else{
+        else {
             viewModelScope.launch {
                 _viewState.value = Event(ShowLoading)
                 val data = withContext(IO) { repository.getNewEmployeesByName(name) }
@@ -60,6 +60,16 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
                     if (data.isEmpty()) Event(ShowEmptyData)
                     else Event(ShowEmployees(data))
             }
+        }
+    }
+
+    fun getEmployeesByWage() {
+        viewModelScope.launch {
+            _viewState.value = Event(ShowLoading)
+            val data = withContext(IO) { repository.getEmployeesByWage() }
+            _viewState.value =
+                if (data.isEmpty()) Event(ShowEmptyData)
+                else Event(ShowEmployees(data))
         }
     }
 
@@ -75,6 +85,8 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     fun safeSearched(query: String?) {
         _searchWord.value = query ?: ""
     }
+
+
 }
 
 sealed class EmployeeListState {
