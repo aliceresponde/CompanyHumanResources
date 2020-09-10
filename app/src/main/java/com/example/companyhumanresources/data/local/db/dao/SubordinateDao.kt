@@ -20,6 +20,9 @@ interface SubordinateDao {
     @Delete
     suspend fun removeSubordinate(subordinate: Subordinate)
 
+    @Query("DELETE FROM subordinate_table WHERE bossId = :bossId")
+    suspend fun deleteByBossId(bossId: Long)
+
     @Query("DELETE FROM subordinate_table")
     suspend fun deleteAll()
 }

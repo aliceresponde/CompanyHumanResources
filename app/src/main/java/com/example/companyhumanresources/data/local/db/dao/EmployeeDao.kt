@@ -10,6 +10,18 @@ interface EmployeeDao {
     @Query("SELECT * FROM employee_table")
     fun getAllEmployeesFlow(): Flow<List<Employee>>
 
+    @Query("SELECT * FROM employee_table ORDER BY wage")
+    fun getAllEmployees():List<Employee>
+
+    @Query("SELECT * FROM employee_table ORDER BY wage")
+    suspend fun getEmployeeByWage(): List<Employee>
+
+    @Query("SELECT * FROM employee_table WHERE name LIKE '%' || :name || '%' ORDER BY wage")
+    suspend fun getEmployeeByWage(name:String): List<Employee>
+
+    @Query("SELECT * FROM employee_table WHERE isNew = 1")
+    suspend fun getNewEmployees(): List<Employee>
+
     @Query("SELECT * FROM employee_table")
     suspend fun getEmployeeWithSubordinates(): List<EmployeeWithSubordinates>
 

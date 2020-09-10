@@ -6,7 +6,9 @@ import com.example.companyhumanresources.data.local.db.dao.SubordinateDao
 import com.example.companyhumanresources.data.local.db.entities.Employee
 import com.example.companyhumanresources.data.local.db.entities.Subordinate
 import com.example.companyhumanresources.data.local.db.relations.EmployeeWithSubordinates
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 
 class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
     private val employeeDao: EmployeeDao = database.employeeDao()
@@ -28,12 +30,28 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
         return employeeDao.getAllEmployeesFlow()
     }
 
+    override fun getAllEmployees(): List<Employee> {
+        return employeeDao.getAllEmployees()
+    }
+
     override suspend fun updateEmployee(employee: Employee) {
         employeeDao.insertEmployee(employee)
     }
 
     override suspend fun deleteAllEmployees() {
         employeeDao.deleteAll()
+    }
+
+    override suspend fun getNewEmployees(): List<Employee> {
+        return employeeDao.getNewEmployees()
+    }
+
+    override suspend fun getNewEmployeesByName(name: String): List<Employee> {
+        return employeeDao.getEmployeeByWage(name)
+    }
+
+    override suspend fun getEmployeesBySalary(): List<Employee> {
+        return employeeDao.getEmployeeByWage()
     }
 
 //    =================== Subordinates ===================
@@ -55,14 +73,14 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
     }
 
     override suspend fun deleteAllSubordinates() {
-        TODO("Not yet implemented")
+        subordinateDao.deleteAll()
     }
 
     override suspend fun deleteSubordinatedByBossId(bossId: Long) {
-        TODO("Not yet implemented")
+        subordinateDao.deleteByBossId(bossId)
     }
 
     override suspend fun deleteAllData() {
-        TODO("Not yet implemented")
+        subordinateDao.deleteAll()
     }
 }

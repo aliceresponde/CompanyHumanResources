@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CompanyHumanResources</string>
+    <string name="employees">Employees</string>
+    <string name="new_employee">New</string>
+    <string name="old_employee">Old</string>
+    <string name="no_data_to_show">No data to show</string>
+    <string name="subordinates">Subordinates:</string>
 </resources>

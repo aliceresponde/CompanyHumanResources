@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+      <variable
+          name="employee"
+          type="com.example.companyhumanresources.ui.employeesList.EmployeeItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/name"
+            tools:text="Name:Bill Gates"
+            android:textSize="22sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/wage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
+            app:employeeWage="@{employee.wage}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="$ 6.000.000" />
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toTopOf="@+id/wage"
+            tools:text="CTO" />
+
+        <Switch
+            android:id="@+id/isNew"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/position"
+            app:layout_constraintTop_toBottomOf="@id/position"
+            tools:enabled="true"
+            tools:text="New"
+            tools:textColor="@android:color/holo_green_light" />
+
+        <TextView
+            android:id="@+id/tile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/isNew"
+            android:layout_marginTop="16dp"
+            android:text="@string/subordinates"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subordinatesRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="40dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tile" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
