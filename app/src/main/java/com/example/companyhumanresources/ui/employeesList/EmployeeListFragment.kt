@@ -1,10 +1,7 @@
 package com.example.companyhumanresources.ui.employeesList
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.DialogInterface.OnCancelListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,15 +16,15 @@ import com.example.companyhumanresources.App
 import com.example.companyhumanresources.R
 import com.example.companyhumanresources.databinding.FilterDialogLayoutBinding
 import com.example.companyhumanresources.databinding.FragmentEmployeeListBinding
-import com.example.companyhumanresources.ui.MainActivity
 import com.example.companyhumanresources.ui.common.EventObserver
 import com.example.companyhumanresources.ui.employeesList.adapter.EmployeeAdapter
-import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState
+import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowEmployees
+import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowEmptyData
+import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowLoading
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListViewModel
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListViewModelFactory
 import com.example.companyhumanresources.ui.gone
 import com.example.companyhumanresources.ui.visible
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class EmployeeListFragment : Fragment() {
     private lateinit var binding: FragmentEmployeeListBinding
@@ -71,22 +68,24 @@ class EmployeeListFragment : Fragment() {
             }
         }
 
-        viewModel.isDataUpdated.observe(viewLifecycleOwner, EventObserver {
-            if (!it) viewModel.syncData()
-        })
-
         viewModel.viewState.observe(
             viewLifecycleOwner,
             EventObserver { state ->
                 when (state) {
-                    EmployeeListState.ShowLoading -> showLoading()
-                    EmployeeListState.ShowEmptyData -> showEmptyData()
-                    is EmployeeListState.ShowEmployees -> showEmployees(state.data)
+                    ShowLoading -> showLoading()
+                    ShowEmptyData -> showEmptyData()
+                    is ShowEmployees -> showEmployees(state.data)
                 }
             }
         )
 
-        viewModel.getEmployees()
+        viewModel.isDataUpdated.observe(viewLifecycleOwner, EventObserver {
+            if (it) {
+                viewModel.getEmployees()
+            }
+        })
+
+        viewModel.syncData()
         return binding.root
     }
 
@@ -97,6 +96,7 @@ class EmployeeListFragment : Fragment() {
             employeeRecycler.visible()
         }
         adapter.update(data)
+
     }
 
     private fun showEmptyData() {
@@ -126,7 +126,8 @@ class EmployeeListFragment : Fragment() {
                         when (dialogBinding.filterGroup.checkedRadioButtonId) {
                             R.id.filterNewEmployee -> viewModel.getNewEmployees()
                             R.id.filterByWage -> viewModel.getEmployeesByWage()
-                            else -> {}
+                            else -> {
+                            }
                         }
                     }
                 }

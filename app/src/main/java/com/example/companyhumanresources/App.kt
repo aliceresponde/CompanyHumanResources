@@ -17,7 +17,6 @@ class App : Application() {
 
     companion object {
         private lateinit var instance: App
-        private lateinit var networkStatusChecker: NetworkConnection
         private val interceptor by lazy { NetworkConnectionInterceptor(instance) }
         private val service by lazy { HumanResourcesApiService.invoke(interceptor) }
         private val database by lazy { EmployeeDatabase.buildDatabase(instance) }
@@ -29,8 +28,5 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        networkStatusChecker = NetworkConnection(instance, getSystemService(ConnectivityManager::class.java))
     }
-
-    fun getNetworkStatusChecker() = networkStatusChecker
 }

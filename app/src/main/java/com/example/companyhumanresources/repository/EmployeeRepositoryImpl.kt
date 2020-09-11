@@ -18,14 +18,6 @@ class EmployeeRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) : EmployeeRepository {
-
-    override fun getAllEmployeesFlow(): Flow<List<EmployeeItem>> =
-        localDataSource.getAllEmployeesFlow().map { localEmployees ->
-            localEmployees.map { employee ->
-                employee.toItem()
-            }
-        }
-
     override suspend fun syncData() {
         val response = withContext(IO) {
             when (val remoteData = remoteDataSource.getEmployees()) {
@@ -43,12 +35,12 @@ class EmployeeRepositoryImpl(
         }
     }
 
-    override suspend fun getAllEmployees(): List<EmployeeItem> {
-        return localDataSource.getAllEmployees().map { it.toItem() }
+    override suspend fun getEmployeeById(employeeId: Long): EmployeeItem {
+        return localDataSource.getEmployeeById(employeeId).toItem()
     }
 
-    override fun getAllEmployeesWithSubordinatesFlow(): Flow<List<EmployeeWithSubordinates>> {
-        return localDataSource.getAllEmployeeWithSubordinateFlow()
+    override suspend fun getAllEmployees(): List<EmployeeItem> {
+        return localDataSource.getAllEmployees().map { it.toItem() }
     }
 
     private suspend fun insertSubordinatesOf(employeeDTO: EmployeeDTO) {
@@ -67,6 +59,10 @@ class EmployeeRepositoryImpl(
         localDataSource.updateEmployee(employee)
     }
 
+    override suspend fun getSubordinatesOf(bossId: Long): List<String> {
+        return localDataSource.getAllSubordinatesByBossId(bossId).map { it.name }
+    }
+
     override suspend fun getNewEmployees(): List<EmployeeItem> {
         return localDataSource.getNewEmployees().map { it.toItem() }
     }
@@ -77,10 +73,6 @@ class EmployeeRepositoryImpl(
 
     override suspend fun getNewEmployeesByName(name: String): List<EmployeeItem> {
         return localDataSource.getNewEmployeesByName(name).map { it.toItem() }
-    }
-
-    override suspend fun getEmployeesBySalary(): List<EmployeeItem> {
-        return localDataSource.getEmployeesBySalary().map { it.toItem() }
     }
 
     private fun EmployeeDTO.toEmployee() = Employee(

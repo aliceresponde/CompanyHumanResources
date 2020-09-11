@@ -14,4 +14,5 @@
     <string name="dialog_opc_wege">Sort by wage</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="no_subordinates">No subordinates related</string>
 </resources>

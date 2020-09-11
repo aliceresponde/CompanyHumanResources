@@ -6,9 +6,7 @@ import com.example.companyhumanresources.data.local.db.dao.SubordinateDao
 import com.example.companyhumanresources.data.local.db.entities.Employee
 import com.example.companyhumanresources.data.local.db.entities.Subordinate
 import com.example.companyhumanresources.data.local.db.relations.EmployeeWithSubordinates
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 
 class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
     private val employeeDao: EmployeeDao = database.employeeDao()
@@ -22,15 +20,7 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
         employeeDao.insertAllEmployees(employees)
     }
 
-    override fun getAllEmployeeWithSubordinateFlow(): Flow<List<EmployeeWithSubordinates>> {
-        return employeeDao.getAllEmployeeWithSubordinateFlow()
-    }
-
-    override fun getAllEmployeesFlow(): Flow<List<Employee>> {
-        return employeeDao.getAllEmployeesFlow()
-    }
-
-    override fun getAllEmployees(): List<Employee> {
+    override suspend fun getAllEmployees(): List<Employee> {
         return employeeDao.getAllEmployees()
     }
 
@@ -42,20 +32,24 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
         employeeDao.deleteAll()
     }
 
+    override suspend fun getEmployeeById(employeeId: Long): Employee {
+        return employeeDao.getEmById(employeeId)
+    }
+
     override suspend fun getNewEmployees(): List<Employee> {
         return employeeDao.getNewEmployees()
     }
 
     override suspend fun getEmployeesByWage(): List<Employee> {
-        return  employeeDao.getEmployeeByWage()
+        return  employeeDao.getEmployeeByName()
     }
 
     override suspend fun getNewEmployeesByName(name: String): List<Employee> {
-        return employeeDao.getEmployeeByWage(name)
+        return employeeDao.getEmployeeByName(name)
     }
 
     override suspend fun getEmployeesBySalary(): List<Employee> {
-        return employeeDao.getEmployeeByWage()
+        return employeeDao.getEmployeeByName()
     }
 
 //    =================== Subordinates ===================

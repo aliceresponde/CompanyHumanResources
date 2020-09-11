@@ -11,7 +11,7 @@ data class Employee(
     @PrimaryKey
     val id: Long,
     val name: String,
-    val position:String,
+    val position: String,
     val wage: Long,
-    val isNew : Boolean = true
-): Parcelable
+    val isNew: Boolean = true,
+) : Parcelable

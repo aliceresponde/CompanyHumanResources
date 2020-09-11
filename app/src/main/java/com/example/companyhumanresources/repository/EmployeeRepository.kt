@@ -6,13 +6,14 @@ import com.example.companyhumanresources.ui.employeesList.EmployeeItem
 import kotlinx.coroutines.flow.Flow
 
 interface EmployeeRepository {
-    fun getAllEmployeesFlow(): Flow<List<EmployeeItem>>
-    fun getAllEmployeesWithSubordinatesFlow(): Flow<List<EmployeeWithSubordinates>>
     suspend fun syncData()
+    suspend fun getEmployeeById(employeeId: Long): EmployeeItem
     suspend fun getAllEmployees(): List<EmployeeItem>
     suspend fun getNewEmployees(): List<EmployeeItem>
     suspend fun getEmployeesByWage(): List<EmployeeItem>
     suspend fun getNewEmployeesByName(name: String): List<EmployeeItem>
-    suspend fun getEmployeesBySalary(): List<EmployeeItem>
     suspend fun updateEmployee(employee: Employee)
+
+    suspend fun getSubordinatesOf(bossId:Long) : List<String>
+
 }

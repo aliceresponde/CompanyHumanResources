@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.companyhumanresources.data.OperationResult
-import com.example.companyhumanresources.data.OperationResult.Success
 import com.example.companyhumanresources.repository.EmployeeRepository
 import com.example.companyhumanresources.ui.common.Event
 import com.example.companyhumanresources.ui.employeesList.EmployeeItem
@@ -26,17 +24,18 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     private val _isDataUpdated = MutableLiveData<Event<Boolean>>()
     val isDataUpdated: LiveData<Event<Boolean>> get() = _isDataUpdated
 
-
     fun getEmployees() {
-        if (searchWord.value.isNullOrEmpty())
+        if (_isDataUpdated.value?.peekContent() == false)
+            syncData()
+        if(_searchWord.value.isNullOrEmpty())
             viewModelScope.launch {
                 val data = withContext(IO) { repository.getAllEmployees() }
                 _viewState.value =
                     if (data.isEmpty()) Event(ShowEmptyData)
                     else Event(ShowEmployees(data))
             }
-        else
-            getNewEmployeesByName(searchWord.value)
+        else getNewEmployeesByName(_searchWord.value)
+
     }
 
     fun getNewEmployees() {
@@ -50,8 +49,7 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     }
 
     fun getNewEmployeesByName(name: String?) {
-        if (name.isNullOrEmpty())
-            getEmployees()
+        if (name.isNullOrEmpty()) getEmployees()
         else {
             viewModelScope.launch {
                 _viewState.value = Event(ShowLoading)
@@ -77,8 +75,8 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
         viewModelScope.launch {
             withContext(IO) {
                 repository.syncData()
+                _isDataUpdated.postValue(Event(true))
             }
-            _isDataUpdated.postValue(Event(true))
         }
     }
 

@@ -8,7 +8,7 @@ interface SubordinateDao {
     @Query("SELECT * FROM subordinate_table")
     suspend fun getAllSubordinates(): List<Subordinate>
 
-    @Query("SELECT * FROM subordinate_table WHERE id  = :bossId")
+    @Query("SELECT * FROM subordinate_table WHERE bossId  = :bossId")
     suspend fun getSubordinatesByBoss(bossId: Long): List<Subordinate>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

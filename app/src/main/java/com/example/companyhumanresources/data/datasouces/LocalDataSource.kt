@@ -9,16 +9,14 @@ interface LocalDataSource {
     // Employee
     suspend fun insertEmployee(employee: Employee)
     suspend fun insertAllEmployees(employees: List<Employee>)
-    fun getAllEmployeeWithSubordinateFlow(): Flow<List<EmployeeWithSubordinates>>
-    fun getAllEmployeesFlow() : Flow<List<Employee>>
-    fun getAllEmployees() : List<Employee>
+    suspend fun getAllEmployees() : List<Employee>
     suspend fun updateEmployee(employee: Employee)
     suspend fun deleteAllEmployees()
 
+    suspend fun getEmployeeById(employeeId: Long) : Employee
     suspend fun getNewEmployees() : List<Employee>
     suspend fun getEmployeesByWage() : List<Employee>
     suspend fun getNewEmployeesByName(name: String) : List<Employee>
-    suspend fun getEmployeesBySalary(): List<Employee>
 
     // subordinates
     suspend fun insertSubordinate(subordinate: Subordinate)
@@ -29,4 +27,5 @@ interface LocalDataSource {
     suspend fun deleteSubordinatedByBossId(bossId: Long)
 
     suspend fun deleteAllData()
+    suspend fun getEmployeesBySalary(): List<Employee>
 }
