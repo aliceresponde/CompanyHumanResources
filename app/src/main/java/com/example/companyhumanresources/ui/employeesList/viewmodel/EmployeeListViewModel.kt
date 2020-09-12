@@ -29,6 +29,7 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
             syncData()
         if(_searchWord.value.isNullOrEmpty())
             viewModelScope.launch {
+                _viewState.value= Event(ShowLoading)
                 val data = withContext(IO) { repository.getAllEmployees() }
                 _viewState.value =
                     if (data.isEmpty()) Event(ShowEmptyData)
