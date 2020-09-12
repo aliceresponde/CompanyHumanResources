@@ -11,6 +11,7 @@ import com.example.companyhumanresources.data.remote.NetworkConnection
 import com.example.companyhumanresources.data.remote.NetworkConnectionInterceptor
 import com.example.companyhumanresources.data.remote.RetrofitDatasource
 import com.example.companyhumanresources.repository.EmployeeRepositoryImpl
+import kotlinx.coroutines.Dispatchers
 
 @RequiresApi(Build.VERSION_CODES.M)
 class App : Application() {
@@ -23,6 +24,7 @@ class App : Application() {
         private val localDataSource by lazy {   RoomDataSource(database)}
         private val remoteDataSource by lazy {  RetrofitDatasource(service)}
         val repository by lazy { EmployeeRepositoryImpl(remoteDataSource, localDataSource) }
+        val coroutineDispatcher by lazy { Dispatchers.IO }
     }
 
     override fun onCreate() {

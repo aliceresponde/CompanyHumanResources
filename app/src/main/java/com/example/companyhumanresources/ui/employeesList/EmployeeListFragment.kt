@@ -11,6 +11,7 @@ import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.companyhumanresources.App
 import com.example.companyhumanresources.R
@@ -28,7 +29,7 @@ import com.example.companyhumanresources.ui.visible
 
 class EmployeeListFragment : Fragment() {
     private lateinit var binding: FragmentEmployeeListBinding
-    private val viewModel: EmployeeListViewModel by viewModels { EmployeeListViewModelFactory(App.repository) }
+    private val viewModel: EmployeeListViewModel by viewModels { EmployeeListViewModelFactory(App.repository, App.coroutineDispatcher) }
     private val adapter: EmployeeAdapter by lazy { EmployeeAdapter(onClickListener = ::showEmployeeDetail) }
 
 
@@ -41,7 +42,7 @@ class EmployeeListFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_employee_list, container, false)
         context
         binding.apply {
-            lifecycleOwner = this@EmployeeListFragment
+            lifecycleOwner = viewLifecycleOwner
             employeeRecycler.adapter = adapter
             filterView.setOnClickListener { showFilerDialog() }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -70,7 +71,7 @@ class EmployeeListFragment : Fragment() {
 
         viewModel.viewState.observe(
             viewLifecycleOwner,
-            EventObserver { state ->
+            Observer { state ->
                 when (state) {
                     ShowLoading -> showLoading()
                     ShowEmptyData -> showEmptyData()

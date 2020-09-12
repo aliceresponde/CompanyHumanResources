@@ -10,13 +10,17 @@ import com.example.companyhumanresources.ui.employeesList.EmployeeItem
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowEmployees
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowEmptyData
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListState.ShowLoading
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewModel() {
-    private val _viewState = MutableLiveData<Event<EmployeeListState>>()
-    val viewState: LiveData<Event<EmployeeListState>> get() = _viewState
+class EmployeeListViewModel(
+    private val repository: EmployeeRepository,
+    private val coroutineDispatcher: CoroutineDispatcher = IO,
+) : ViewModel() {
+    private val _viewState = MutableLiveData<EmployeeListState>()
+    val viewState: LiveData<EmployeeListState> get() = _viewState
 
     private val _searchWord = MutableLiveData<String>()
     val searchWord: LiveData<String> get() = _searchWord
@@ -27,13 +31,13 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     fun getEmployees() {
         if (_isDataUpdated.value?.peekContent() == false)
             syncData()
-        if(_searchWord.value.isNullOrEmpty())
+        if (_searchWord.value.isNullOrEmpty())
             viewModelScope.launch {
-                _viewState.value= Event(ShowLoading)
-                val data = withContext(IO) { repository.getAllEmployees() }
+                _viewState.value = ShowLoading
+                val data = withContext(coroutineDispatcher) { repository.getAllEmployees() }
                 _viewState.value =
-                    if (data.isEmpty()) Event(ShowEmptyData)
-                    else Event(ShowEmployees(data))
+                    if (data.isEmpty()) ShowEmptyData
+                    else ShowEmployees(data)
             }
         else getNewEmployeesByName(_searchWord.value)
 
@@ -41,40 +45,41 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
 
     fun getNewEmployees() {
         viewModelScope.launch {
-            _viewState.value = Event(ShowLoading)
-            val data = withContext(IO) { repository.getNewEmployees() }
+            _viewState.value = ShowLoading
+            val data = withContext(coroutineDispatcher) { repository.getNewEmployees() }
             _viewState.value =
-                if (data.isEmpty()) Event(ShowEmptyData)
-                else Event(ShowEmployees(data))
+                if (data.isEmpty()) ShowEmptyData
+                else ShowEmployees(data)
         }
     }
 
     fun getNewEmployeesByName(name: String?) {
-        if (name.isNullOrEmpty()) getEmployees()
+        if (name.isNullOrEmpty())
+            getEmployees()
         else {
             viewModelScope.launch {
-                _viewState.value = Event(ShowLoading)
-                val data = withContext(IO) { repository.getNewEmployeesByName(name) }
+                _viewState.value = ShowLoading
+                val data = withContext(coroutineDispatcher) { repository.getNewEmployeesByName(name) }
                 _viewState.value =
-                    if (data.isEmpty()) Event(ShowEmptyData)
-                    else Event(ShowEmployees(data))
+                    if (data.isEmpty()) ShowEmptyData
+                    else ShowEmployees(data)
             }
         }
     }
 
     fun getEmployeesByWage() {
         viewModelScope.launch {
-            _viewState.value = Event(ShowLoading)
-            val data = withContext(IO) { repository.getEmployeesByWage() }
+            _viewState.value = ShowLoading
+            val data = withContext(coroutineDispatcher) { repository.getEmployeesByWage() }
             _viewState.value =
-                if (data.isEmpty()) Event(ShowEmptyData)
-                else Event(ShowEmployees(data))
+                if (data.isEmpty()) (ShowEmptyData)
+                else ShowEmployees(data)
         }
     }
 
     fun syncData() {
         viewModelScope.launch {
-            withContext(IO) {
+            withContext(coroutineDispatcher) {
                 repository.syncData()
                 _isDataUpdated.postValue(Event(true))
             }
@@ -84,8 +89,6 @@ class EmployeeListViewModel(private val repository: EmployeeRepository) : ViewMo
     fun safeSearched(query: String?) {
         _searchWord.value = query ?: ""
     }
-
-
 }
 
 sealed class EmployeeListState {
