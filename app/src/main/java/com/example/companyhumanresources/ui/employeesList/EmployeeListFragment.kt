@@ -26,10 +26,12 @@ import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeList
 import com.example.companyhumanresources.ui.employeesList.viewmodel.EmployeeListViewModelFactory
 import com.example.companyhumanresources.ui.gone
 import com.example.companyhumanresources.ui.visible
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmployeeListFragment : Fragment() {
     private lateinit var binding: FragmentEmployeeListBinding
-    private val viewModel: EmployeeListViewModel by viewModels { EmployeeListViewModelFactory(App.repository, App.coroutineDispatcher) }
+    private val viewModel: EmployeeListViewModel by viewModels()
     private val adapter: EmployeeAdapter by lazy { EmployeeAdapter(onClickListener = ::showEmployeeDetail) }
 
 
