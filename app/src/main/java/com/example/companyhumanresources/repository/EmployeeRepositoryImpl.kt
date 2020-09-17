@@ -13,13 +13,14 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class EmployeeRepositoryImpl(
+class EmployeeRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
 ) : EmployeeRepository {
     override suspend fun syncData() {
-        val response = withContext(IO) {
+        withContext(IO) {
             when (val remoteData = remoteDataSource.getEmployees()) {
                 is Success -> {
                     val data = remoteData.data.employees

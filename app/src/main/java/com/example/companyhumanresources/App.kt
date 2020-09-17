@@ -11,24 +11,8 @@ import com.example.companyhumanresources.data.remote.NetworkConnection
 import com.example.companyhumanresources.data.remote.NetworkConnectionInterceptor
 import com.example.companyhumanresources.data.remote.RetrofitDatasource
 import com.example.companyhumanresources.repository.EmployeeRepositoryImpl
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.Dispatchers
 
-@RequiresApi(Build.VERSION_CODES.M)
-class App : Application() {
-
-    companion object {
-        private lateinit var instance: App
-        private val interceptor by lazy { NetworkConnectionInterceptor(instance) }
-        private val service by lazy { HumanResourcesApiService.invoke(interceptor) }
-        private val database by lazy { EmployeeDatabase.buildDatabase(instance) }
-        private val localDataSource by lazy {   RoomDataSource(database)}
-        private val remoteDataSource by lazy {  RetrofitDatasource(service)}
-        val repository by lazy { EmployeeRepositoryImpl(remoteDataSource, localDataSource) }
-        val coroutineDispatcher by lazy { Dispatchers.IO }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-    }
-}
+@HiltAndroidApp
+class App : Application()

@@ -7,8 +7,9 @@ import com.example.companyhumanresources.data.local.db.entities.Employee
 import com.example.companyhumanresources.data.local.db.entities.Subordinate
 import com.example.companyhumanresources.data.local.db.relations.EmployeeWithSubordinates
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
+class RoomDataSource @Inject constructor( database: EmployeeDatabase) : LocalDataSource {
     private val employeeDao: EmployeeDao = database.employeeDao()
     private val subordinateDao: SubordinateDao = database.subordinateDao()
 
@@ -41,7 +42,7 @@ class RoomDataSource(private val database: EmployeeDatabase) : LocalDataSource {
     }
 
     override suspend fun getEmployeesByWage(): List<Employee> {
-        return  employeeDao.getEmployeeByName()
+        return employeeDao.getEmployeeByName()
     }
 
     override suspend fun getNewEmployeesByName(name: String): List<Employee> {

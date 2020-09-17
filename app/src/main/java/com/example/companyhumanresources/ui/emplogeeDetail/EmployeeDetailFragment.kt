@@ -20,13 +20,13 @@ import com.example.companyhumanresources.ui.emplogeeDetail.UiState.ShowLoading
 import com.example.companyhumanresources.ui.employeesList.EmployeeItem
 import com.example.companyhumanresources.ui.gone
 import com.example.companyhumanresources.ui.visible
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmployeeDetailFragment : Fragment() {
     private lateinit var binding: FragmentEmployeeDetailBinding
     private val args: EmployeeDetailFragmentArgs by navArgs()
-    private val viewModel: EmployeeDetailViewModel by viewModels {
-        EmployeeDetailViewModelFactory(App.repository)
-    }
+    private val viewModel: EmployeeDetailViewModel by viewModels()
     private val bossItem: EmployeeItem by lazy { args.employeeI }
     private lateinit var adapter: StringAdapter
 

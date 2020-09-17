@@ -1,5 +1,6 @@
 package com.example.companyhumanresources.ui.emplogeeDetail
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class EmployeeDetailViewModel(private val repository: EmployeeRepository) : ViewModel() {
+class EmployeeDetailViewModel@ViewModelInject constructor(private val repository: EmployeeRepository) : ViewModel() {
     private val _viewState = MutableLiveData<Event<UiState>>()
     val viewState: LiveData<Event<UiState>> get() = _viewState
 
